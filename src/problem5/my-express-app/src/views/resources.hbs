@@ -1,0 +1,29 @@
+<div>
+        <p>Filter resources:</p>
+        <form action="/resource" method="GET">
+            <label for="name">Resource Name:</label>
+            <input type="text" id="name" name="name">
+            <label for="description">Resource Description:</label>
+            <input type="text" id="description" name="description">
+            <button type="submit">Filter</button>
+        </form>
+
+        <p>List of resources:</p>
+        {{#if resources.length}}
+            {{#each resources}}
+            <div class="resource-item">
+                <p>Resource Name: {{name}}</p>
+                <textarea id="area" cols="25" rows="3">{{description}}</textarea>
+                <a href="/resource/details/{{_id}}">View Details</a>
+                <a href="/resource/delete/{{_id}}">Delete</a>
+            </div>
+            {{/each}}
+        {{else}}
+            <p>No resources found</p>
+        {{/if}}
+
+        {{#if filtering}}
+        <a href="/resource">Drop filters</a>
+        {{/if}}
+        <a href="/resource/add">Add Resource</a>
+    </div>

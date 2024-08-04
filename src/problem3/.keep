@@ -1,0 +1,78 @@
+// 1.useMemo is usually used to enhance performance by caching the sortedBalances. 
+// However, it recalculates the cached value on each render because prices are not employed within the 
+// sortedBalances calculation. This results in redundant recalculations.
+
+// 2.The .toFixed() method is employed without specifying the number of decimal places, 
+// which can lead to unanticipated results.
+
+// 3.The filtering logic within sortedBalances contains an unnecessary condition. 
+// The if (balance.amount <= 0) check is nested within another condition if (lhsPriority > -99)
+
+// 4.The WalletBalance interface lacks a blockchain property, however it is accessed in the getPriority function. 
+
+// 5.The formattedBalances and rows mappings over sortedBalances are separate.
+
+// 6.Utilizing the array index as the key prop in React can lead to performance issues and bugs 
+// when the list order changes.
+
+interface WalletBalance {
+  currency: string;
+  amount: number;
+  blockchain: string;
+}
+interface FormattedWalletBalance {
+  currency: string;
+  amount: number;
+  blockchain: string;
+  formatted: string;
+}
+
+interface Props extends BoxProps {}
+
+const WalletPage: React.FC<Props> = (props: Props) => {
+  const { children, ...rest } = props;
+  const balances = useWalletBalances();
+  const prices = usePrices();
+
+  const getPriority = (blockchain: string): number => {
+    switch (blockchain) {
+      case 'Osmosis':
+        return 100;
+      case 'Ethereum':
+        return 50;
+      case 'Arbitrum':
+        return 30;
+      case 'Zilliqa':
+        return 20;
+      case 'Neo':
+        return 20;
+      default:
+        return -99;
+    }
+  };
+
+  const sortedAndFormattedBalances = useMemo(() => {
+    return balances
+      .filter((balance: WalletBalance) => getPriority(balance.blockchain) > -99 && balance.amount > 0)
+      .sort((lhs: WalletBalance, rhs: WalletBalance) => getPriority(rhs.blockchain) - getPriority(lhs.blockchain))
+      .map((balance: WalletBalance) => ({
+        ...balance,
+        formatted: balance.amount.toFixed(2)
+      }));
+  }, [balances]);
+
+  const rows = sortedAndFormattedBalances.map((balance: FormattedWalletBalance) => {
+    const usdValue = prices[balance.currency] * balance.amount;
+    return (
+      <WalletRow
+        className={classes.row}
+        key={balance.currency} 
+        amount={balance.amount}
+        usdValue={usdValue}
+        formattedAmount={balance.formatted}
+      />
+    );
+  });
+
+  return <div {...rest}>{rows}</div>;
+};

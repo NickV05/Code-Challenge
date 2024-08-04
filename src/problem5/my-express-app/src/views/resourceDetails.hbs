@@ -1,0 +1,12 @@
+{{#if foundResource}}
+
+<div>
+            <p> Resource Name: {{foundResource.name}}</p>
+            <p>{{foundResource.description}}</p>
+            <a href="/resource/edit/{{foundResource._id}}">Edit</a>  
+            <a href="/resource/delete/{{foundResource._id}}">Delete</a>  
+            <a href="/resource">Back</a>  
+        </div>
+
+
+{{/if}}

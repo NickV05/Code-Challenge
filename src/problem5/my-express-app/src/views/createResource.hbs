@@ -1,0 +1,19 @@
+<div>
+  <div>
+    <h2  class="centered-text">Add Resource</h2>
+    <form action="/resource/add" method="POST">
+      <label> Resource Name
+        <textarea id="name" cols="40" rows="1" name="name" placeholder="Resource 1"></textarea>
+      </label>
+
+      <label> Resource Description
+        <textarea id="description" cols="40" rows="3" name="description" placeholder="Resource description"></textarea>
+      </label>
+
+      <button type="submit">Create</button>
+    </form>
+    {{#if errorMessage}}
+      <p class="error">{{errorMessage}}</p>
+    {{/if}}
+  </div>
+</div>

@@ -1,0 +1,18 @@
+{{#if foundResource}}
+<div>
+  <div >
+    <h2 class="centered-text">Edit Resource</h2>
+    <form action="/resource/edit/{{foundResource._id}}" method="POST">
+      <label> Resource Name
+        <textarea id="name" cols="40" rows="1" name="name">{{foundResource.name}}</textarea>
+      </label>
+
+      <label> Resource Description
+        <textarea id="description" cols="40" rows="3" name="description" >{{foundResource.description}}</textarea>
+      </label>
+
+      <button type="submit">Update</button>
+    </form>
+  </div>
+</div>
+{{/if}}
